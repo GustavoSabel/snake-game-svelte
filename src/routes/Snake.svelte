@@ -1,0 +1,99 @@
+<script lang="ts">
+	import { onMount } from 'svelte';
+
+	export let fieldWidth: number;
+	export let fieldHeight: number;
+
+	const blockSize = 50;
+
+	let snake = {
+		direction: 'down',
+		positions: [
+			{ x: 2, y: fieldWidth / 2 - 1, key: 1 },
+			{ x: 3, y: fieldWidth / 2 - 1, key: 2 },
+			{ x: 4, y: fieldWidth / 2 - 1, key: 3 }
+		]
+	};
+
+	onMount(() => {
+		document.onkeydown = function (e) {
+			switch (e.key) {
+				case 'ArrowLeft':
+					if (snake.direction !== 'right') snake.direction = 'left';
+					break;
+				case 'ArrowUp':
+					if (snake.direction !== 'down') snake.direction = 'up';
+					break;
+				case 'ArrowRight':
+					if (snake.direction !== 'left') snake.direction = 'right';
+					break;
+				case 'ArrowDown':
+					if (snake.direction !== 'up') snake.direction = 'down';
+					break;
+			}
+		};
+	});
+
+	export function move() {
+		snake.positions.shift();
+		const oldHead = snake.positions[snake.positions.length - 1];
+
+		const newHead = {
+			x: oldHead.x,
+			y: oldHead.y,
+			key: oldHead.key + 1
+		};
+
+		if (snake.direction === 'down') {
+			newHead.x = (newHead.x + 1) % fieldHeight;
+		} else if (snake.direction === 'right') {
+			newHead.y = (newHead.y + 1) % fieldWidth;
+		} else if (snake.direction === 'up') {
+			newHead.x = newHead.x - 1;
+			if (newHead.x < 0) newHead.x = fieldHeight - 1;
+		} else if (snake.direction === 'left') {
+			newHead.y = newHead.y - 1;
+			if (newHead.y < 0) newHead.y = fieldWidth - 1;
+		}
+
+		snake.positions.push(newHead);
+		snake = snake;
+	}
+
+	let intervalNumber: number;
+	export function start() {
+		if (!intervalNumber) {
+			intervalNumber = setInterval(() => {
+				move();
+			}, 200);
+		}
+	}
+
+	export function stop() {
+		clearInterval(intervalNumber);
+	}
+</script>
+
+<div class="body">
+	{#each snake.positions as pos (pos.key)}
+		<div class="body-part" style="top: {pos.x * blockSize}px; left: {pos.y * blockSize}px" />
+	{/each}
+</div>
+
+<style>
+	.body {
+		position: relative;
+	}
+
+	.body-part:last-child {
+		background-color: rebeccapurple;
+	}
+
+	.body-part {
+		width: 48px;
+		height: 48px;
+		margin: 1px;
+		background-color: black;
+		position: absolute;
+	}
+</style>
