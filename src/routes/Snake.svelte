@@ -5,6 +5,7 @@
 	export let fieldWidth: number;
 	export let fieldHeight: number;
 	let nextDirection: Direction = 'down';
+	let increment = false;
 
 	const blockSize = 50;
 
@@ -50,7 +51,10 @@
 	});
 
 	export function move() {
-		snake.positions.shift();
+		if (!increment) {
+			snake.positions.shift();
+		}
+		increment = false;
 		const oldHead = snake.positions[snake.positions.length - 1];
 
 		const newHead = {
@@ -59,7 +63,7 @@
 			key: oldHead.key + 1
 		};
 
-    snake.direction = nextDirection;
+		snake.direction = nextDirection;
 		if (snake.direction === 'down') {
 			newHead.x = (newHead.x + 1) % fieldHeight;
 		} else if (snake.direction === 'right') {
@@ -87,6 +91,10 @@
 
 	export function stop() {
 		clearInterval(intervalNumber);
+	}
+
+	export function incrementSize() {
+		increment = true;
 	}
 </script>
 

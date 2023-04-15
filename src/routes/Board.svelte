@@ -9,6 +9,7 @@
 
 <button on:click={() => snake.start()}>Start</button>
 <button on:click={() => snake.stop()}>Stop</button>
+<button on:click={() => snake.incrementSize()}>Increment</button>
 
 <div class="board" style="width: {fieldWidth * 50}px; height: {fieldHeight * 50}px;">
 	<Snake bind:this={snake} {fieldWidth} {fieldHeight} />
