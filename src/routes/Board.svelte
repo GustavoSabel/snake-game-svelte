@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import Snake from './Snake.svelte';
 
 	const fieldWidth = 21;
@@ -21,15 +22,24 @@
 	function onMove(e: CustomEvent<{ x: number; y: number }>) {
 		const food = foods.find((food) => food.x === e.detail.x && food.y === e.detail.y);
 		if (food) {
-			foods = foods.filter(f => f !== food);
+			foods = foods.filter((f) => f !== food);
 			snake.incrementSize();
 			addNewFood();
 		}
 	}
+
+	onMount(() => {
+		document.addEventListener('keydown', (e) => {
+			console.log(e.key);
+			if (e.key === ' ') {
+				snake.pause();
+			}
+		});
+	});
 </script>
 
 <button on:click={() => snake.start()}>Start</button>
-<button on:click={() => snake.stop()}>Stop</button>
+<button on:click={() => snake.pause()}>Pause</button>
 <button on:click={() => snake.incrementSize()}>Increment</button>
 
 <div class="board" style="width: {fieldWidth * 50}px; height: {fieldHeight * 50}px;">

@@ -29,7 +29,7 @@
 	}
 
 	onMount(() => {
-		document.onkeydown = (e) => {
+		document.addEventListener('keydown', (e) => {
 			switch (e.key) {
 				case 'ArrowLeft':
 					if (snake.direction !== 'right') nextDirection = 'left';
@@ -43,12 +43,12 @@
 				case 'ArrowDown':
 					if (snake.direction !== 'up') nextDirection = 'down';
 					break;
+        default:
+          return;
 			}
 
-			if (!intervalNumber) {
-				start();
-			}
-		};
+			start();
+		});
 	});
 
 	export function move() {
@@ -80,10 +80,10 @@
 		snake.positions.push(newHead);
 		snake = snake;
 
-    dispatch('move', newHead)
+		dispatch('move', newHead);
 	}
 
-	let intervalNumber: number;
+	let intervalNumber: number | null = null;
 	export function start() {
 		if (!intervalNumber) {
 			intervalNumber = setInterval(() => {
@@ -92,8 +92,11 @@
 		}
 	}
 
-	export function stop() {
-		clearInterval(intervalNumber);
+	export function pause() {
+		if (intervalNumber) {
+			clearInterval(intervalNumber);
+			intervalNumber = null;
+		}
 	}
 
 	export function incrementSize() {
