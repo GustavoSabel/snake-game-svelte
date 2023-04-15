@@ -1,43 +1,45 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import type { Direction } from '../types/Direction';
 
 	export let fieldWidth: number;
 	export let fieldHeight: number;
+	let nextDirection: Direction = 'down';
 
 	const blockSize = 50;
 
-  function createInicialSnakeBody(size: number) {
-    const positions = [];
-    const middleY = Math.round(fieldWidth / 2) - 1;
-    for (let i = 0; i < size; i++) {
-      positions.push({
-        x: i + 2,
-        y: middleY,
-        key: i
-      });
-    }
-    return positions;
-  }
+	function createInicialSnakeBody(size: number) {
+		const positions = [];
+		const middleY = Math.round(fieldWidth / 2) - 1;
+		for (let i = 0; i < size; i++) {
+			positions.push({
+				x: i + 2,
+				y: middleY,
+				key: i
+			});
+		}
+		return positions;
+	}
 
 	let snake = {
-		direction: 'down',
+		direction: nextDirection as Direction,
 		positions: createInicialSnakeBody(5)
 	};
 
 	onMount(() => {
-		document.onkeydown = function (e) {
+		document.onkeydown = (e) => {
 			switch (e.key) {
 				case 'ArrowLeft':
-					if (snake.direction !== 'right') snake.direction = 'left';
+					if (snake.direction !== 'right') nextDirection = 'left';
 					break;
 				case 'ArrowUp':
-					if (snake.direction !== 'down') snake.direction = 'up';
+					if (snake.direction !== 'down') nextDirection = 'up';
 					break;
 				case 'ArrowRight':
-					if (snake.direction !== 'left') snake.direction = 'right';
+					if (snake.direction !== 'left') nextDirection = 'right';
 					break;
 				case 'ArrowDown':
-					if (snake.direction !== 'up') snake.direction = 'down';
+					if (snake.direction !== 'up') nextDirection = 'down';
 					break;
 			}
 
@@ -57,6 +59,7 @@
 			key: oldHead.key + 1
 		};
 
+    snake.direction = nextDirection;
 		if (snake.direction === 'down') {
 			newHead.x = (newHead.x + 1) % fieldHeight;
 		} else if (snake.direction === 'right') {
