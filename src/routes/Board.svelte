@@ -1,8 +1,8 @@
 <script lang="ts">
 	import Snake from './Snake.svelte';
 
-	const fieldWidth = 20;
-	const fieldHeight = 10;
+	const fieldWidth = 21;
+	const fieldHeight = 12;
 
 	let snake: Snake;
 </script>

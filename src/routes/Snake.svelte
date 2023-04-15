@@ -6,13 +6,22 @@
 
 	const blockSize = 50;
 
+  function createInicialSnakeBody(size: number) {
+    const positions = [];
+    const middleY = Math.round(fieldWidth / 2) - 1;
+    for (let i = 0; i < size; i++) {
+      positions.push({
+        x: i + 2,
+        y: middleY,
+        key: i
+      });
+    }
+    return positions;
+  }
+
 	let snake = {
 		direction: 'down',
-		positions: [
-			{ x: 2, y: fieldWidth / 2 - 1, key: 1 },
-			{ x: 3, y: fieldWidth / 2 - 1, key: 2 },
-			{ x: 4, y: fieldWidth / 2 - 1, key: 3 }
-		]
+		positions: createInicialSnakeBody(5)
 	};
 
 	onMount(() => {
@@ -30,6 +39,10 @@
 				case 'ArrowDown':
 					if (snake.direction !== 'up') snake.direction = 'down';
 					break;
+			}
+
+			if (!intervalNumber) {
+				start();
 			}
 		};
 	});
