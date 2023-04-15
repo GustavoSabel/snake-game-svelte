@@ -1,13 +1,19 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type { Direction } from '../types/Direction';
+	import { createEventDispatcher } from 'svelte';
+	const dispatch = createEventDispatcher();
 
 	export let fieldWidth: number;
 	export let fieldHeight: number;
-	let nextDirection: Direction = 'down';
-	let increment = false;
 
 	const blockSize = 50;
+	let nextDirection: Direction = 'down';
+	let increment = false;
+	let snake = {
+		direction: nextDirection as Direction,
+		positions: createInicialSnakeBody(5)
+	};
 
 	function createInicialSnakeBody(size: number) {
 		const positions = [];
@@ -21,11 +27,6 @@
 		}
 		return positions;
 	}
-
-	let snake = {
-		direction: nextDirection as Direction,
-		positions: createInicialSnakeBody(5)
-	};
 
 	onMount(() => {
 		document.onkeydown = (e) => {
@@ -78,6 +79,8 @@
 
 		snake.positions.push(newHead);
 		snake = snake;
+
+    dispatch('move', newHead)
 	}
 
 	let intervalNumber: number;
