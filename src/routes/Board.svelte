@@ -7,16 +7,16 @@
 
 	let snake: Snake;
 
-	const randomPlace = () => {
+	const randomAvaliablePlace = () => {
 		return {
 			x: Math.floor(Math.random() * fieldHeight),
 			y: Math.floor(Math.random() * fieldWidth)
 		};
 	};
-	let foods = [randomPlace(), randomPlace()];
+	let foods = [randomAvaliablePlace()];
 
 	function addNewFood() {
-		foods.push(randomPlace());
+		foods.push(randomAvaliablePlace());
 	}
 
 	function onMove(e: CustomEvent<{ x: number; y: number }>) {
@@ -28,13 +28,16 @@
 		}
 	}
 
+	const onKeyDow = (e: KeyboardEvent) => {
+		if (e.key === ' ') {
+			snake.pause();
+		}
+	};
+	
+
 	onMount(() => {
-		document.addEventListener('keydown', (e) => {
-			console.log(e.key);
-			if (e.key === ' ') {
-				snake.pause();
-			}
-		});
+		document.addEventListener('keydown', onKeyDow);
+		return () => document.removeEventListener('keydown', onKeyDow);
 	});
 </script>
 

@@ -28,30 +28,32 @@
 		return positions;
 	}
 
-	onMount(() => {
-		document.addEventListener('keydown', (e) => {
-			switch (e.key) {
-				case 'ArrowLeft':
-					if (snake.direction !== 'right') nextDirection = 'left';
-					break;
-				case 'ArrowUp':
-					if (snake.direction !== 'down') nextDirection = 'up';
-					break;
-				case 'ArrowRight':
-					if (snake.direction !== 'left') nextDirection = 'right';
-					break;
-				case 'ArrowDown':
-					if (snake.direction !== 'up') nextDirection = 'down';
-					break;
-        default:
-          return;
-			}
+	const onKeyDow = (e: KeyboardEvent) => {
+		switch (e.key) {
+			case 'ArrowLeft':
+				if (snake.direction !== 'right') nextDirection = 'left';
+				break;
+			case 'ArrowUp':
+				if (snake.direction !== 'down') nextDirection = 'up';
+				break;
+			case 'ArrowRight':
+				if (snake.direction !== 'left') nextDirection = 'right';
+				break;
+			case 'ArrowDown':
+				if (snake.direction !== 'up') nextDirection = 'down';
+				break;
+			default:
+				return;
+		}
+		start();
+	};
 
-			start();
-		});
+	onMount(() => {
+		document.addEventListener('keydown', onKeyDow);
+    return () => document.removeEventListener('keydown', onKeyDow);
 	});
 
-	export function move() {
+	function move() {
 		if (!increment) {
 			snake.positions.shift();
 		}
