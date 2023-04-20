@@ -8,6 +8,7 @@
   function isRunning() {
     return !!intervalNumber;
   }
+
 	function start() {
 		if (!intervalNumber) {
 			intervalNumber = setInterval(() => {

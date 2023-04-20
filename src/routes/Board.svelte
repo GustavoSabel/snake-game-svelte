@@ -6,6 +6,7 @@
 	const fieldHeight = 12;
 
 	let snake: Snake;
+	let foods: { x: number; y: number }[] = [];
 
 	const randomAvaliablePlace = () => {
 		return {
@@ -13,10 +14,13 @@
 			y: Math.floor(Math.random() * fieldWidth)
 		};
 	};
-	let foods = [randomAvaliablePlace()];
 
 	function addNewFood() {
-		foods.push(randomAvaliablePlace());
+		foods = [ ...foods, randomAvaliablePlace() ];
+	}
+
+	export function run() {
+		snake.run();
 	}
 
 	function onMove(e: CustomEvent<{ x: number; y: number }>) {
@@ -26,10 +30,6 @@
 			snake.incrementSize();
 			addNewFood();
 		}
-	}
-
-	export function run() {
-		snake.run();
 	}
 
 	const onKeyDow = (e: KeyboardEvent) => {
@@ -51,6 +51,7 @@
 
 	onMount(() => {
 		document.addEventListener('keydown', onKeyDow);
+		addNewFood();
 		return () => document.removeEventListener('keydown', onKeyDow);
 	});
 </script>
