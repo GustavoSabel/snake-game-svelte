@@ -4,6 +4,7 @@
 
 	const fieldWidth = 21;
 	const fieldHeight = 12;
+	const blockSize = 40;
 
 	let snake: Snake;
 	let foods: { x: number; y: number }[] = [];
@@ -16,7 +17,7 @@
 	};
 
 	function addNewFood() {
-		foods = [ ...foods, randomAvaliablePlace() ];
+		foods = [...foods, randomAvaliablePlace()];
 	}
 
 	export function run() {
@@ -56,35 +57,32 @@
 	});
 </script>
 
-<button on:click={() => snake.start()}>Start</button>
-<button on:click={() => snake.pause()}>Pause</button>
-<button on:click={() => snake.incrementSize()}>Increment</button>
-
-<div class="board" style="width: {fieldWidth * 50}px; height: {fieldHeight * 50}px;">
-	<Snake bind:this={snake} {fieldWidth} {fieldHeight} on:move={onMove} />
+<div
+	class="board"
+	style:width="{fieldWidth * blockSize}px"
+	style:height="{fieldHeight * blockSize}px"
+>
+	<Snake bind:this={snake} {fieldWidth} {fieldHeight} on:move={onMove} {blockSize} />
 
 	{#each foods as food}
-		<div class="food" style="top: {food.x * 50}px; left: {food.y * 50}px" />
+		<div
+			class="food"
+			style:top="{food.x * blockSize}px"
+			style:left="{food.y * blockSize}px"
+			style:width="{blockSize}px"
+			style:height="{blockSize}px"
+		/>
 	{/each}
 </div>
 
 <style>
 	.board {
-		width: 500px;
-		height: 500px;
 		background-color: rgba(106, 106, 106, 0.745);
 		position: relative;
 	}
 
-	button {
-		font-size: 1rem;
-		padding: 0.5rem 1rem;
-	}
-
 	.food {
 		background-color: red;
-		width: 48px;
-		height: 48px;
 		position: absolute;
 	}
 </style>

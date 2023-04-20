@@ -5,8 +5,8 @@
 
 	export let fieldWidth: number;
 	export let fieldHeight: number;
+	export let blockSize: number;
 
-	const blockSize = 50;
 	let nextDirection: Direction = 'down';
 	let increment = false;
 	let snake = {
@@ -28,10 +28,10 @@
 	}
 
 	export function changeDirectionTo(newDirection: Direction) {
-		if(snake.direction === 'up' && newDirection === 'down') return;
-		if(snake.direction === 'down' && newDirection === 'up') return;
-		if(snake.direction === 'left' && newDirection === 'right') return;
-		if(snake.direction === 'right' && newDirection === 'left') return;
+		if (snake.direction === 'up' && newDirection === 'down') return;
+		if (snake.direction === 'down' && newDirection === 'up') return;
+		if (snake.direction === 'left' && newDirection === 'right') return;
+		if (snake.direction === 'right' && newDirection === 'left') return;
 		nextDirection = newDirection;
 	}
 
@@ -74,7 +74,13 @@
 
 <div class="body">
 	{#each snake.positions as pos (pos.key)}
-		<div class="body-part" style="top: {pos.x * blockSize}px; left: {pos.y * blockSize}px" />
+		<div
+			class="body-part"
+			style:top="{pos.x * blockSize}px"
+			style:left="{pos.y * blockSize}px"
+			style:width="{blockSize}px"
+			style:height="{blockSize}px"
+		/>
 	{/each}
 </div>
 
@@ -88,9 +94,6 @@
 	}
 
 	.body-part {
-		width: 48px;
-		height: 48px;
-		margin: 1px;
 		background-color: black;
 		position: absolute;
 	}
