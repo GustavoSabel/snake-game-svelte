@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import type { Direction } from '../types/Direction';
 	import { createEventDispatcher } from 'svelte';
 	const dispatch = createEventDispatcher();
@@ -28,32 +27,15 @@
 		return positions;
 	}
 
-	const onKeyDow = (e: KeyboardEvent) => {
-		switch (e.key) {
-			case 'ArrowLeft':
-				if (snake.direction !== 'right') nextDirection = 'left';
-				break;
-			case 'ArrowUp':
-				if (snake.direction !== 'down') nextDirection = 'up';
-				break;
-			case 'ArrowRight':
-				if (snake.direction !== 'left') nextDirection = 'right';
-				break;
-			case 'ArrowDown':
-				if (snake.direction !== 'up') nextDirection = 'down';
-				break;
-			default:
-				return;
-		}
-		start();
-	};
+	export function changeDirectionTo(newDirection: Direction) {
+		if(snake.direction === 'up' && newDirection === 'down') return;
+		if(snake.direction === 'down' && newDirection === 'up') return;
+		if(snake.direction === 'left' && newDirection === 'right') return;
+		if(snake.direction === 'right' && newDirection === 'left') return;
+		nextDirection = newDirection;
+	}
 
-	onMount(() => {
-		document.addEventListener('keydown', onKeyDow);
-    return () => document.removeEventListener('keydown', onKeyDow);
-	});
-
-	function move() {
+	export function run() {
 		if (!increment) {
 			snake.positions.shift();
 		}
@@ -83,22 +65,6 @@
 		snake = snake;
 
 		dispatch('move', newHead);
-	}
-
-	let intervalNumber: number | null = null;
-	export function start() {
-		if (!intervalNumber) {
-			intervalNumber = setInterval(() => {
-				move();
-			}, 200);
-		}
-	}
-
-	export function pause() {
-		if (intervalNumber) {
-			clearInterval(intervalNumber);
-			intervalNumber = null;
-		}
 	}
 
 	export function incrementSize() {

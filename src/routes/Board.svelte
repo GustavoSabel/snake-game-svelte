@@ -28,12 +28,26 @@
 		}
 	}
 
+	export function run() {
+		snake.run();
+	}
+
 	const onKeyDow = (e: KeyboardEvent) => {
-		if (e.key === ' ') {
-			snake.pause();
+		switch (e.key) {
+			case 'ArrowLeft':
+				snake.changeDirectionTo('left');
+				break;
+			case 'ArrowUp':
+				snake.changeDirectionTo('up');
+				break;
+			case 'ArrowRight':
+				snake.changeDirectionTo('right');
+				break;
+			case 'ArrowDown':
+				snake.changeDirectionTo('down');
+				break;
 		}
 	};
-	
 
 	onMount(() => {
 		document.addEventListener('keydown', onKeyDow);
