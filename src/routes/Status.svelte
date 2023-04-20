@@ -1,21 +1,29 @@
 <script lang="ts">
-	import { gameConfig } from './GameStore';
-
-	export let status: string;
+	import { gameConfig, gameStatus } from './GameStore';
 
 	$: fieldWidth = $gameConfig.fieldWidth;
 	$: fieldHeight = $gameConfig.fieldHeight;
 	$: blockSize = $gameConfig.blockSize;
+
+  let message = '';
+  $: {
+    if($gameStatus === 'stopped') {
+      message = 'GAME PAUSED';
+    } else if($gameStatus === 'losted') {
+      message = 'GAME OVER';
+    } else {
+      message = '';
+    } 
+  };
 </script>
 
 <div style:width="{fieldWidth * blockSize}px" style:height="{fieldHeight * blockSize}px">
-  <span>{status}</span>
+  <span>{message}</span>
 </div>
 
 <style>
   div {
     position: absolute;
-    border: 1px solid;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -23,6 +31,6 @@
   }
 	span {
 		color: rgba(59, 59, 59, 0.726);
-    font-size: 200px;
+    font-size: 100px;
 	}
 </style>
