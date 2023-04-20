@@ -1,6 +1,8 @@
 <script lang="ts">
 	import Board from './Board.svelte';
 	import { onMount } from 'svelte';
+	import Status from './Status.svelte';
+	import { gameConfig } from './GameStore';
 
 	let intervalNumber: number | null = null;
   let board: Board
@@ -9,11 +11,13 @@
     return !!intervalNumber;
   }
 
+  $: status = intervalNumber ? '' : 'Paused';
+
 	function start() {
 		if (!intervalNumber) {
 			intervalNumber = setInterval(() => {
 				board.run();
-			}, 200);
+			}, $gameConfig.speed);
 		}
 	}
 
@@ -50,5 +54,6 @@
 
 <main>
 	<h1>Snake with Svelte</h1>
+  <Status {status} />
 	<Board bind:this={board} />
 </main>

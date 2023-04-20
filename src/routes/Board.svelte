@@ -1,10 +1,11 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import Snake from './Snake.svelte';
+	import { gameConfig } from './GameStore';
 
-	const fieldWidth = 21;
-	const fieldHeight = 12;
-	const blockSize = 40;
+	$: fieldWidth = $gameConfig.fieldWidth;
+	$: fieldHeight = $gameConfig.fieldHeight;
+	$: blockSize = $gameConfig.blockSize;
 
 	let snake: Snake;
 	let foods: { x: number; y: number }[] = [];
@@ -62,7 +63,7 @@
 	style:width="{fieldWidth * blockSize}px"
 	style:height="{fieldHeight * blockSize}px"
 >
-	<Snake bind:this={snake} {fieldWidth} {fieldHeight} on:move={onMove} {blockSize} />
+	<Snake bind:this={snake} on:move={onMove} />
 
 	{#each foods as food}
 		<div

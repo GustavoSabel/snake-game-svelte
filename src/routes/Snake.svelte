@@ -1,17 +1,21 @@
 <script lang="ts">
 	import type { Direction } from '../types/Direction';
-	import { createEventDispatcher } from 'svelte';
+	import { createEventDispatcher, onMount } from 'svelte';
+	import { gameConfig } from './GameStore';
 	const dispatch = createEventDispatcher();
 
-	export let fieldWidth: number;
-	export let fieldHeight: number;
-	export let blockSize: number;
+	$: fieldWidth = $gameConfig.fieldWidth;
+	$: fieldHeight = $gameConfig.fieldHeight;
+	$: blockSize = $gameConfig.blockSize;
 
 	let nextDirection: Direction = 'down';
 	let increment = false;
-	let snake = {
-		direction: nextDirection as Direction,
-		positions: createInicialSnakeBody(5)
+	let snake: {
+		direction: Direction;
+		positions: { x: number; y: number; key: number }[];
+	} = {
+		direction: 'down',
+		positions: []
 	};
 
 	function createInicialSnakeBody(size: number) {
@@ -70,6 +74,13 @@
 	export function incrementSize() {
 		increment = true;
 	}
+
+	onMount(() => {
+		snake = {
+			direction: nextDirection as Direction,
+			positions: createInicialSnakeBody(5)
+		};
+	});
 </script>
 
 <div class="body">
