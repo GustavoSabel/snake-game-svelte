@@ -3,6 +3,7 @@
 	import Snake from './Snake.svelte';
 	import { gameConfig, gameStatus } from './GameStore';
 	import type { SnakeBody } from '../types/SnakeType';
+	import Status from './Status.svelte';
 
 	$: fieldWidth = $gameConfig.fieldWidth;
 	$: fieldHeight = $gameConfig.fieldHeight;
@@ -79,6 +80,7 @@
 	style:width="{fieldWidth * blockSize}px"
 	style:height="{fieldHeight * blockSize}px"
 >
+	<Status />
 	<Snake bind:this={snake} on:move={onSnakeMove} />
 
 	{#each foods as food}
@@ -94,8 +96,9 @@
 
 <style>
 	.board {
-		background-color: rgba(106, 106, 106, 0.745);
+		background-color: #5a5a5a;
 		position: relative;
+		
 	}
 
 	.food {

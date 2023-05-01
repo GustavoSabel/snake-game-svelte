@@ -110,5 +110,6 @@
 	.body-part {
 		background-color: black;
 		position: absolute;
+		border: 1px solid #5a5a5a;
 	}
 </style>

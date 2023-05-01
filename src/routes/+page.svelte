@@ -1,7 +1,6 @@
 <script lang="ts">
 	import Board from './Board.svelte';
 	import { onMount } from 'svelte';
-	import Status from './Status.svelte';
 	import { gameConfig, gameStatus } from './GameStore';
 
 	let intervalNumber: number | null = null;
@@ -62,7 +61,29 @@
 </script>
 
 <main>
-	<h1>Snake with Svelte</h1>
-	<Status />
+	<h1>Snake Game with Svelte</h1>
 	<Board bind:this={board} />
 </main>
+
+<style>
+	:global(html, body) {
+		height: 100%;
+	}
+	:global(body) {
+		margin: 0;
+		background-color: black;
+		font-family: Arial, sans-serif;
+	}
+
+	h1 {
+		color: #f1f1f1;
+	}
+
+	main {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		height: 100%;
+	}
+</style>
