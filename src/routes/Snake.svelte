@@ -2,6 +2,7 @@
 	import type { Direction } from '../types/Direction';
 	import { createEventDispatcher, onMount } from 'svelte';
 	import { gameConfig } from './GameStore';
+	import type { SnakeType } from '../types/SnakeType';
 	const dispatch = createEventDispatcher();
 
 	$: fieldWidth = $gameConfig.fieldWidth;
@@ -10,12 +11,9 @@
 
 	let nextDirection: Direction = 'down';
 	let increment = false;
-	let snake: {
-		direction: Direction;
-		positions: { x: number; y: number; key: number }[];
-	} = {
+	let snake: SnakeType = {
 		direction: 'down',
-		positions: []
+		body: []
 	};
 
 	function createInicialSnakeBody(size: number) {
@@ -41,10 +39,10 @@
 
 	export function run() {
 		if (!increment) {
-			snake.positions.shift();
+			snake.body.shift();
 		}
 		increment = false;
-		const oldHead = snake.positions[snake.positions.length - 1];
+		const oldHead = snake.body[snake.body.length - 1];
 
 		const newHead = {
 			x: oldHead.x,
@@ -65,10 +63,18 @@
 			if (newHead.y < 0) newHead.y = fieldWidth - 1;
 		}
 
-		snake.positions.push(newHead);
+		snake.body.push(newHead);
 		snake = snake;
 
-		dispatch('move', newHead);
+		dispatch('move', snake.body);
+	}
+
+	export function restart() {
+		nextDirection = 'down';
+		snake = {
+			direction: nextDirection as Direction,
+			body: createInicialSnakeBody(5)
+		};
 	}
 
 	export function incrementSize() {
@@ -76,15 +82,12 @@
 	}
 
 	onMount(() => {
-		snake = {
-			direction: nextDirection as Direction,
-			positions: createInicialSnakeBody(5)
-		};
+		restart()
 	});
 </script>
 
 <div class="body">
-	{#each snake.positions as pos (pos.key)}
+	{#each snake.body as pos (pos.key)}
 		<div
 			class="body-part"
 			style:top="{pos.x * blockSize}px"

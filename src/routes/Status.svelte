@@ -4,33 +4,34 @@
 	$: fieldWidth = $gameConfig.fieldWidth;
 	$: fieldHeight = $gameConfig.fieldHeight;
 	$: blockSize = $gameConfig.blockSize;
-
-  let message = '';
-  $: {
-    if($gameStatus === 'stopped') {
-      message = 'GAME PAUSED';
-    } else if($gameStatus === 'losted') {
-      message = 'GAME OVER';
-    } else {
-      message = '';
-    } 
-  };
 </script>
 
 <div style:width="{fieldWidth * blockSize}px" style:height="{fieldHeight * blockSize}px">
-  <span>{message}</span>
+	{#if $gameStatus === 'stopped'}
+		<span class='msg'>GAME PAUSED</span>
+		<span class='instructions'>Press space to resume</span>
+	{/if}
+	{#if $gameStatus === 'losted'}
+		<span class='msg'>GAME OVER</span>
+		<span class='instructions'>Press space to start a new game</span>
+	{/if}
 </div>
 
 <style>
-  div {
-    position: absolute;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1;
-  }
-	span {
+	div {
+		position: absolute;
+		display: flex;
+    flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		z-index: 1;
+	}
+	.msg {
 		color: rgba(59, 59, 59, 0.726);
-    font-size: 100px;
+		font-size: 100px;
+	}
+	.instructions {
+		color: rgba(59, 59, 59, 0.726);
+		font-size: 20px;
 	}
 </style>

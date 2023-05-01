@@ -5,55 +5,64 @@
 	import { gameConfig, gameStatus } from './GameStore';
 
 	let intervalNumber: number | null = null;
-  let board: Board
+	let board: Board;
 
-  function isRunning() {
-    return !!intervalNumber;
-  }
+	gameStatus.subscribe((status) => {
+		if (status === 'running') {
+			startLoop();
+		} else {
+			pauseLoop();
+		}
+	});
 
-	function start() {
+	function startLoop() {
 		if (!intervalNumber) {
 			intervalNumber = setInterval(() => {
 				board.run();
 			}, $gameConfig.speed);
-      gameStatus.run()
 		}
 	}
 
-	function pause() {
+	function pauseLoop() {
 		if (intervalNumber) {
 			clearInterval(intervalNumber);
 			intervalNumber = null;
-      gameStatus.pause()
 		}
 	}
 
 	const onKeyDow = (e: KeyboardEvent) => {
-		switch (e.key) {
-			case ' ':
-        if(isRunning()) {
-				  pause();
-        } else {
-          start();
-        }
-				return;
-			case 'ArrowLeft':
-			case 'ArrowUp':
-			case 'ArrowRight':
-			case 'ArrowDown':
-				start();
-				break;
+		if (e.key === ' ') {
+			if ($gameStatus === 'running') {
+				gameStatus.pause();
+			} else if ($gameStatus === 'losted') {
+				board.restart();
+				gameStatus.run();
+			} else if ($gameStatus === 'stopped') {
+				gameStatus.run();
+			}
+			return;
+		}
+
+		if ($gameStatus === 'running' || $gameStatus === 'stopped') {
+			switch (e.key) {
+				case 'ArrowLeft':
+				case 'ArrowUp':
+				case 'ArrowRight':
+				case 'ArrowDown':
+					gameStatus.run();
+					break;
+			}
 		}
 	};
 
-  onMount(() => {
-    document.addEventListener('keydown', onKeyDow);
-    return () => document.removeEventListener('keydown', onKeyDow);
-  });
+	onMount(() => {
+		document.addEventListener('keydown', onKeyDow);
+		return () => document.removeEventListener('keydown', onKeyDow);
+	});
 </script>
 
 <main>
 	<h1>Snake with Svelte</h1>
-  <Status />
+	<Status />
 	<Board bind:this={board} />
 </main>

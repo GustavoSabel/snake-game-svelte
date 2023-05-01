@@ -1,5 +1,4 @@
-import { readable } from 'svelte/store';
-import { writable } from 'svelte/store';
+import { readable, writable } from 'svelte/store';
 
 export const gameConfig = readable({
   fieldWidth: 21,

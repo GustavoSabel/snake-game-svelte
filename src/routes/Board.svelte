@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import Snake from './Snake.svelte';
-	import { gameConfig } from './GameStore';
+	import { gameConfig, gameStatus } from './GameStore';
+	import type { SnakeBody } from '../types/SnakeType';
 
 	$: fieldWidth = $gameConfig.fieldWidth;
 	$: fieldHeight = $gameConfig.fieldHeight;
@@ -25,13 +26,28 @@
 		snake.run();
 	}
 
-	function onMove(e: CustomEvent<{ x: number; y: number }>) {
-		const food = foods.find((food) => food.x === e.detail.x && food.y === e.detail.y);
+	export function restart() {
+		foods = [randomAvaliablePlace()];
+		snake.restart();
+	}
+
+	function onSnakeMove(e: CustomEvent<SnakeBody>) {
+		const snakeBody = e.detail;
+		const head = snakeBody[e.detail.length - 1];
+		const food = foods.find((food) => food.x === head.x && food.y === head.y);
 		if (food) {
 			foods = foods.filter((f) => f !== food);
 			snake.incrementSize();
 			addNewFood();
 		}
+
+		snakeBody.forEach((bodyPart) => {
+			if (bodyPart.x === head.x && bodyPart.y === head.y) {
+				if (head !== bodyPart) {
+					gameStatus.lost();
+				}
+			}
+		});
 	}
 
 	const onKeyDow = (e: KeyboardEvent) => {
@@ -53,7 +69,7 @@
 
 	onMount(() => {
 		document.addEventListener('keydown', onKeyDow);
-		addNewFood();
+		restart();
 		return () => document.removeEventListener('keydown', onKeyDow);
 	});
 </script>
@@ -63,7 +79,7 @@
 	style:width="{fieldWidth * blockSize}px"
 	style:height="{fieldHeight * blockSize}px"
 >
-	<Snake bind:this={snake} on:move={onMove} />
+	<Snake bind:this={snake} on:move={onSnakeMove} />
 
 	{#each foods as food}
 		<div
