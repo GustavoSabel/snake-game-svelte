@@ -56,7 +56,10 @@
 
 	onMount(() => {
 		document.addEventListener('keydown', onKeyDow);
-		return () => document.removeEventListener('keydown', onKeyDow);
+		return () => {
+			document.removeEventListener('keydown', onKeyDow);
+			pauseLoop();
+		}
 	});
 </script>
 
