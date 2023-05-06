@@ -92,8 +92,8 @@
 			class="body-part"
 			style:top="{pos.x * blockSize}px"
 			style:left="{pos.y * blockSize}px"
-			style:width="{blockSize}px"
-			style:height="{blockSize}px"
+			style:width="{blockSize - 2}px"
+			style:height="{blockSize - 2}px"
 		/>
 	{/each}
 </div>
