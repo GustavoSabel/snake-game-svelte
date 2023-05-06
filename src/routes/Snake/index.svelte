@@ -5,6 +5,7 @@
 	import type { SnakeType } from '../../types/SnakeType';
 	import BodyPart from './BodyPart.svelte';
 	import Head from './Head.svelte';
+	import Position from '../Position.svelte';
 	const dispatch = createEventDispatcher();
 
 	$: fieldWidth = $gameConfig.fieldWidth;
@@ -89,17 +90,11 @@
 </script>
 
 {#each snake.body as pos, index (pos.key)}
-	<div class="body-part" style:top="{pos.x * blockSize}px" style:left="{pos.y * blockSize}px">
+	<Position {...pos}>
 		{#if index === snake.body.length - 1}
 			<Head direction={snake.direction} />
 		{:else}
 			<BodyPart />
 		{/if}
-	</div>
+	</Position>
 {/each}
-
-<style>
-	.body-part {
-		position: absolute;
-	}
-</style>
