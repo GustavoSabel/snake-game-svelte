@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import Snake from './Snake.svelte';
+	import Snake from './Snake/index.svelte';
 	import { gameConfig, gameStatus } from './GameStore';
 	import type { SnakeBody } from '../types/SnakeType';
 	import Status from './Status.svelte';

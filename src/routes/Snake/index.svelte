@@ -1,8 +1,10 @@
 <script lang="ts">
-	import type { Direction } from '../types/Direction';
+	import type { Direction } from '../../types/Direction';
 	import { createEventDispatcher, onMount } from 'svelte';
-	import { gameConfig } from './GameStore';
-	import type { SnakeType } from '../types/SnakeType';
+	import { gameConfig } from '../GameStore';
+	import type { SnakeType } from '../../types/SnakeType';
+	import BodyPart from './BodyPart.svelte';
+	import Head from './Head.svelte';
 	const dispatch = createEventDispatcher();
 
 	$: fieldWidth = $gameConfig.fieldWidth;
@@ -82,34 +84,22 @@
 	}
 
 	onMount(() => {
-		restart()
+		restart();
 	});
 </script>
 
-<div class="body">
-	{#each snake.body as pos (pos.key)}
-		<div
-			class="body-part"
-			style:top="{pos.x * blockSize}px"
-			style:left="{pos.y * blockSize}px"
-			style:width="{blockSize - 2}px"
-			style:height="{blockSize - 2}px"
-		/>
-	{/each}
-</div>
+{#each snake.body as pos, index (pos.key)}
+	<div class="body-part" style:top="{pos.x * blockSize}px" style:left="{pos.y * blockSize}px">
+		{#if index === snake.body.length - 1}
+			<Head direction={snake.direction} />
+		{:else}
+			<BodyPart />
+		{/if}
+	</div>
+{/each}
 
 <style>
-	.body {
-		position: relative;
-	}
-
-	.body-part:last-child {
-		background-color: rebeccapurple;
-	}
-
 	.body-part {
-		background-color: black;
 		position: absolute;
-		border: 1px solid #5a5a5a;
 	}
 </style>
