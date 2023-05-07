@@ -34,7 +34,7 @@
 		if (e.key === ' ') {
 			if ($gameStatus === 'running') {
 				gameStatus.pause();
-			} else if ($gameStatus === 'losted' || $gameStatus === 'won') {
+			} else if ($gameStatus === 'lose' || $gameStatus === 'won') {
 				board.restart();
 				gameStatus.run();
 			} else if ($gameStatus === 'stopped') {
