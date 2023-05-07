@@ -11,6 +11,7 @@
 <style>
 	div {
 		background-color: #3a5a34;
-		border: 1px solid #5a5a5a;
+		margin: 1px;
 	}
 </style>
+ 

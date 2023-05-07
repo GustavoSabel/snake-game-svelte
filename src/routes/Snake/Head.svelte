@@ -42,6 +42,7 @@
 	.eyes {
 		display: flex;
 		justify-content: space-around;
-		margin-top: 20px;
+		position: relative;
+		top: 20px
 	}
 </style>

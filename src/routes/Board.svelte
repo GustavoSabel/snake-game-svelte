@@ -94,7 +94,7 @@
 
 <style>
 	.board {
-		background-color: #5a5a5a;
+		background-color: #708d74;
 		position: relative;
 	}
 </style>

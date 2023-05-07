@@ -2,6 +2,7 @@
 	import Board from './Board.svelte';
 	import { onMount } from 'svelte';
 	import { gameConfig, gameStatus } from './GameStore';
+	import GameDescription from './GameDescription.svelte';
 
 	let intervalNumber: number | null = null;
 	let board: Board;
@@ -17,7 +18,7 @@
 	function startLoop() {
 		if (!intervalNumber) {
 			intervalNumber = setInterval(() => {
-				board.run();
+				board?.run();
 			}, $gameConfig.speed);
 		}
 	}
@@ -64,29 +65,17 @@
 </script>
 
 <main>
-	<h1>Snake Game with Svelte</h1>
 	<Board bind:this={board} />
+	<GameDescription />
 </main>
 
 <style>
-	:global(html, body) {
-		height: 100%;
-	}
-	:global(body) {
-		margin: 0;
-		background-color: black;
-		font-family: Arial, sans-serif;
-	}
-
-	h1 {
-		color: #f1f1f1;
-	}
-
 	main {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
 		height: 100%;
+		gap: 16px;
 	}
 </style>
