@@ -7,4 +7,6 @@ export type SnakeType = {
 
 export type SnakeBody = SnakeBodyPart[]
 
-export type SnakeBodyPart = { x: number; y: number; key: number, direction: Direction; }
+export type Turn = 'left' | 'right'
+
+export type SnakeBodyPart = { x: number; y: number; key: number, direction: Direction; willTurn?: Turn }

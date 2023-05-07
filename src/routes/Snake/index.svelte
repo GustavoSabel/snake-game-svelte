@@ -68,6 +68,8 @@
 			if (newHead.y < 0) newHead.y = fieldWidth - 1;
 		}
 
+		oldHead.willTurn = turn(oldHead.direction, nextDirection);
+
 		snake.body.push(newHead);
 		snake = snake;
 
@@ -103,21 +105,9 @@
 		}
 	}
 
-	function turnLeft(partBefore: SnakeBodyPart, partAfter: SnakeBodyPart) {
-		return turnPart(partBefore, partAfter) === 'left';
-	}
-
-	function turnRight(partBefore: SnakeBodyPart, partAfter: SnakeBodyPart) {
-		return turnPart(partBefore, partAfter) === 'right';
-	}
-
-	function turnPart(partBefore: SnakeBodyPart, partAfter: SnakeBodyPart) {
-		return turn(partBefore.direction, partAfter.direction);
-	}
-
 	function turn(directionBefore: Direction, directionAfter: Direction) {
 		if (directionBefore === directionAfter) {
-			return '';
+			return;
 		}
 
 		const directionBeforeNumber = getDirectionNumber(directionBefore);
@@ -134,22 +124,14 @@
 	<Position {...part}>
 		{#if index === snake.body.length - 1}
 			<Head direction={part.direction} />
-		{:else if index === 0}
-			<BodyPart
-				direction={part.direction}
-				round={{
-					frontLeft: turnRight(part, snake.body[index + 1]),
-					frontRight: turnLeft(part, snake.body[index + 1]),
-					bottonLeft: !turnLeft(part, snake.body[index + 1]),
-					bottonRight: !turnRight(part, snake.body[index + 1])
-				}}
-			/>
 		{:else}
 			<BodyPart
 				direction={part.direction}
 				round={{
-					frontLeft: turnRight(part, snake.body[index + 1]),
-					frontRight: turnLeft(part, snake.body[index + 1])
+					frontLeft: part.willTurn === 'right',
+					frontRight: part.willTurn === 'left',
+					bottonLeft: index === 0 && part.willTurn !== 'left',
+					bottonRight: index === 0 && part.willTurn !== 'right'
 				}}
 			/>
 		{/if}
