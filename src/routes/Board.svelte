@@ -5,52 +5,74 @@
 	import type { SnakeBody } from '../types/SnakeType';
 	import Status from './Status.svelte';
 	import Food from './Food.svelte';
-	import Position from './Position.svelte';
+	import type { Position } from '../types/Position';
+	import PositionElement from './PositionElement.svelte';
 
 	$: fieldWidth = $gameConfig.fieldWidth;
 	$: fieldHeight = $gameConfig.fieldHeight;
 	$: blockSize = $gameConfig.blockSize;
 
 	let snake: Snake;
-	let foods: { x: number; y: number }[] = [];
+	let foods: Position[] = [];
 
-	const randomAvaliablePlace = () => {
-		return {
-			x: Math.floor(Math.random() * fieldHeight),
-			y: Math.floor(Math.random() * fieldWidth)
-		};
+	const randomAvaliablePlace = (unavaliableSpaces: Position[]): Position | null => {
+		const avaliableSpaces: Position[] = [];
+
+		for (let x = 0; x < fieldHeight; x++) {
+			for (let y = 0; y < fieldWidth; y++) {
+				if (!unavaliableSpaces.some((s) => s.x === x && s.y === y)) {
+					avaliableSpaces.push({ x, y });
+				}
+			}
+		}
+
+		if (!avaliableSpaces.length) {
+			return null;
+		}
+
+		const randomPosition = Math.floor(Math.random() * avaliableSpaces.length);
+		const newPosition = avaliableSpaces[randomPosition];
+
+		return newPosition;
 	};
-
-	function addNewFood() {
-		foods = [...foods, randomAvaliablePlace()];
-	}
 
 	export function run() {
 		snake.run();
 	}
 
 	export function restart() {
-		foods = [randomAvaliablePlace()];
-		snake.restart();
+		const snakeBody = snake.restart();
+		foods = [randomAvaliablePlace(snakeBody.body)!];
 	}
 
 	function onSnakeMove(e: CustomEvent<SnakeBody>) {
 		const snakeBody = e.detail;
 		const head = snakeBody[e.detail.length - 1];
-		const food = foods.find((food) => food.x === head.x && food.y === head.y);
-		if (food) {
-			foods = foods.filter((f) => f !== food);
-			snake.incrementSize();
-			addNewFood();
-		}
 
 		snakeBody.forEach((bodyPart) => {
 			if (bodyPart.x === head.x && bodyPart.y === head.y) {
 				if (head !== bodyPart) {
 					gameStatus.lost();
+					return;
 				}
 			}
 		});
+
+		const food = foods.find((food) => food.x === head.x && food.y === head.y);
+		if (food) {
+			foods = foods.filter((f) => f !== food);
+			snake.incrementSize();
+
+			const avaliablePlace = randomAvaliablePlace([...foods, ...snakeBody]);
+			if (avaliablePlace) {
+				foods = [...foods, avaliablePlace];
+			} else {
+				if (foods.length === 0) {
+					gameStatus.won();
+					return;
+				}
+			}
+		}
 	}
 
 	const onKeyDow = (e: KeyboardEvent) => {
@@ -86,9 +108,9 @@
 	<Snake bind:this={snake} on:move={onSnakeMove} />
 
 	{#each foods as food}
-		<Position x={food.x} y={food.y}>
+		<PositionElement x={food.x} y={food.y}>
 			<Food />
-		</Position>
+		</PositionElement>
 	{/each}
 </div>
 

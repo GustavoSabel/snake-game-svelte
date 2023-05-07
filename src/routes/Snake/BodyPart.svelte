@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Direction } from '../../types/Direction';
 	import { gameConfig } from '../GameStore';
-	import Rotate from './Rotate.svelte';
+	import RotateElement from './RotateElement.svelte';
 
 	$: blockSize = $gameConfig.blockSize;
 
@@ -15,7 +15,7 @@
 	} = {}
 </script>
 
-<Rotate {direction}>
+<RotateElement {direction}>
 	<div style:width="{blockSize}px" style:height="{blockSize}px"
 		style:border-end-end-radius="{round.frontLeft ? `50%` : ''}"
 		style:border-end-start-radius="{round.frontRight ? `50%` : ''}"
@@ -24,7 +24,7 @@
 		>
 		<slot />
 	</div>
-</Rotate>
+</RotateElement>
 
 <style>
 	div {

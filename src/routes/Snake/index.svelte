@@ -5,8 +5,7 @@
 	import type { SnakeBodyPart, SnakeType } from '../../types/SnakeType';
 	import BodyPart from './BodyPart.svelte';
 	import Head from './Head.svelte';
-	import Position from '../Position.svelte';
-	import { error } from '@sveltejs/kit';
+	import PositionElement from '../PositionElement.svelte';
 	const dispatch = createEventDispatcher();
 
 	$: fieldWidth = $gameConfig.fieldWidth;
@@ -82,6 +81,7 @@
 			direction: nextDirection as Direction,
 			body: createInicialSnakeBody(5, nextDirection)
 		};
+		return snake;
 	}
 
 	export function incrementSize() {
@@ -121,7 +121,7 @@
 </script>
 
 {#each snake.body as part, index (part.key)}
-	<Position {...part}>
+	<PositionElement {...part}>
 		{#if index === snake.body.length - 1}
 			<Head direction={part.direction} />
 		{:else}
@@ -135,5 +135,5 @@
 				}}
 			/>
 		{/if}
-	</Position>
+	</PositionElement>
 {/each}

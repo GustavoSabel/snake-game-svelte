@@ -1,4 +1,5 @@
 import type { Direction } from "./Direction";
+import type { Position } from "./Position";
 
 export type SnakeType = {
   direction: Direction;
@@ -9,4 +10,4 @@ export type SnakeBody = SnakeBodyPart[]
 
 export type Turn = 'left' | 'right'
 
-export type SnakeBodyPart = { x: number; y: number; key: number, direction: Direction; willTurn?: Turn }
+export type SnakeBodyPart = Position & { key: number, direction: Direction; willTurn?: Turn }

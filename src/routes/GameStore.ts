@@ -9,14 +9,15 @@ export const gameConfig = readable({
 
 
 function createGameStatus() {
-  const { subscribe, set } = writable<'stopped' | 'running' | 'losted'>('stopped');
+  const { subscribe, set } = writable<'stopped' | 'running' | 'losted' | 'won'>('stopped');
 
   return {
     subscribe,
     run: () => set('running'),
     pause: () => set('stopped'),
     lost: () => set('losted'),
-    newGame: () => set('stopped')
+    newGame: () => set('stopped'),
+    won: () => set('won'),
   };
 }
 

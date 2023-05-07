@@ -15,6 +15,10 @@
 		<span class='msg'>GAME OVER</span>
 		<span class='instructions'>Press space to start a new game</span>
 	{/if}
+	{#if $gameStatus === 'won'}
+		<span class='msg'>YOU WIN!!!</span>
+		<span class='instructions'>Press space to start a new game</span>
+	{/if}
 </div>
 
 <style>
