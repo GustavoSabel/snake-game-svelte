@@ -2,15 +2,15 @@
 	import type { Direction } from '../../types/Direction';
 	import { createEventDispatcher, onMount } from 'svelte';
 	import { gameConfig } from '../GameStore';
-	import type { SnakeType } from '../../types/SnakeType';
+	import type { SnakeBodyPart, SnakeType } from '../../types/SnakeType';
 	import BodyPart from './BodyPart.svelte';
 	import Head from './Head.svelte';
 	import Position from '../Position.svelte';
+	import { error } from '@sveltejs/kit';
 	const dispatch = createEventDispatcher();
 
 	$: fieldWidth = $gameConfig.fieldWidth;
 	$: fieldHeight = $gameConfig.fieldHeight;
-	$: blockSize = $gameConfig.blockSize;
 
 	let nextDirection: Direction = 'down';
 	let increment = false;
@@ -19,14 +19,15 @@
 		body: []
 	};
 
-	function createInicialSnakeBody(size: number) {
+	function createInicialSnakeBody(size: number, direction: Direction) {
 		const positions = [];
 		const middleY = Math.round(fieldWidth / 2) - 1;
 		for (let i = 0; i < size; i++) {
 			positions.push({
 				x: i + 2,
 				y: middleY,
-				key: i
+				key: i,
+				direction
 			});
 		}
 		return positions;
@@ -47,10 +48,11 @@
 		increment = false;
 		const oldHead = snake.body[snake.body.length - 1];
 
-		const newHead = {
+		const newHead: SnakeBodyPart = {
 			x: oldHead.x,
 			y: oldHead.y,
-			key: oldHead.key + 1
+			key: oldHead.key + 1,
+			direction: nextDirection
 		};
 
 		snake.direction = nextDirection;
@@ -76,7 +78,7 @@
 		nextDirection = 'down';
 		snake = {
 			direction: nextDirection as Direction,
-			body: createInicialSnakeBody(5)
+			body: createInicialSnakeBody(5, nextDirection)
 		};
 	}
 
@@ -87,14 +89,69 @@
 	onMount(() => {
 		restart();
 	});
+
+	function getDirectionNumber(direction: Direction) {
+		switch (direction) {
+			case 'up':
+				return 0;
+			case 'left':
+				return 1;
+			case 'down':
+				return 2;
+			default:
+				return 3;
+		}
+	}
+
+	function turnLeft(partBefore: SnakeBodyPart, partAfter: SnakeBodyPart) {
+		return turnPart(partBefore, partAfter) === 'left';
+	}
+
+	function turnRight(partBefore: SnakeBodyPart, partAfter: SnakeBodyPart) {
+		return turnPart(partBefore, partAfter) === 'right';
+	}
+
+	function turnPart(partBefore: SnakeBodyPart, partAfter: SnakeBodyPart) {
+		return turn(partBefore.direction, partAfter.direction);
+	}
+
+	function turn(directionBefore: Direction, directionAfter: Direction) {
+		if (directionBefore === directionAfter) {
+			return '';
+		}
+
+		const directionBeforeNumber = getDirectionNumber(directionBefore);
+		const directionAfterNumber = getDirectionNumber(directionAfter);
+
+		if ((directionBeforeNumber + 1) % 4 === directionAfterNumber) {
+			return 'left';
+		}
+		return 'right';
+	}
 </script>
 
-{#each snake.body as pos, index (pos.key)}
-	<Position {...pos}>
+{#each snake.body as part, index (part.key)}
+	<Position {...part}>
 		{#if index === snake.body.length - 1}
-			<Head direction={snake.direction} />
+			<Head direction={part.direction} />
+		{:else if index === 0}
+			<BodyPart
+				direction={part.direction}
+				round={{
+					frontLeft: turnRight(part, snake.body[index + 1]),
+					frontRight: turnLeft(part, snake.body[index + 1]),
+					bottonLeft: !turnLeft(part, snake.body[index + 1]),
+					bottonRight: !turnRight(part, snake.body[index + 1])
+				}}
+			/>
 		{:else}
-			<BodyPart />
+			<BodyPart
+				direction={part.direction}
+				round={{
+					frontLeft: turnRight(part, snake.body[index + 1]),
+					frontRight: turnLeft(part, snake.body[index + 1])
+				}}
+			/>
 		{/if}
 	</Position>
 {/each}

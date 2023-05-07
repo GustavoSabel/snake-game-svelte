@@ -1,34 +1,21 @@
 <script lang="ts">
 	import type { Direction } from '../../types/Direction';
-	import { gameConfig } from '../GameStore';
 	import BodyPart from './BodyPart.svelte';
 
 	export let direction: Direction;
-	let rotate = 0;
 
-	$: blockSize = $gameConfig.blockSize;
-
-	$: {
-		if (direction === 'down') {
-			rotate = 0;
-		} else if (direction === 'left') {
-			rotate = 90;
-		} else if (direction === 'up') {
-			rotate = 180;
-		} else if (direction === 'right') {
-			rotate = 270;
-		}
-	}
+	const round = {
+		frontLeft: true,
+		frontRight: true
+	};
 </script>
 
-<div style:transform={`rotate(${rotate}deg)`}>
-	<BodyPart>
-		<div class="eyes">
-			<div class="eye eye1" />
-			<div class="eye eye2" />
-		</div>
-	</BodyPart>
-</div>
+<BodyPart {direction} {round}>
+	<div class="eyes">
+		<div class="eye eye1" />
+		<div class="eye eye2" />
+	</div>
+</BodyPart>
 
 <style>
 	.eye {
@@ -43,6 +30,7 @@
 		display: flex;
 		justify-content: space-around;
 		position: relative;
-		top: 20px
+		top: 15px;
+		padding: 5px;
 	}
 </style>
