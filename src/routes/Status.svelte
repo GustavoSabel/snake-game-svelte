@@ -11,7 +11,7 @@
 		<span class='msg'>GAME PAUSED</span>
 		<span class='instructions'>Press space to resume</span>
 	{/if}
-	{#if $gameStatus === 'losted'}
+	{#if $gameStatus === 'lose'}
 		<span class='msg'>GAME OVER</span>
 		<span class='instructions'>Press space to start a new game</span>
 	{/if}

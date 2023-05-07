@@ -52,7 +52,7 @@
 		snakeBody.forEach((bodyPart) => {
 			if (bodyPart.x === head.x && bodyPart.y === head.y) {
 				if (head !== bodyPart) {
-					gameStatus.lost();
+					gameStatus.lose();
 					return;
 				}
 			}

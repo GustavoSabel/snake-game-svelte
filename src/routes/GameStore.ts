@@ -9,13 +9,13 @@ export const gameConfig = readable({
 
 
 function createGameStatus() {
-  const { subscribe, set } = writable<'stopped' | 'running' | 'losted' | 'won'>('stopped');
+  const { subscribe, set } = writable<'stopped' | 'running' | 'lose' | 'won'>('stopped');
 
   return {
     subscribe,
     run: () => set('running'),
     pause: () => set('stopped'),
-    lost: () => set('losted'),
+    lose: () => set('lose'),
     newGame: () => set('stopped'),
     won: () => set('won'),
   };
