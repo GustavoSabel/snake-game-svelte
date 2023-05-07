@@ -16,12 +16,12 @@
 	let foods: Position[] = [];
 
 	const randomAvaliablePlace = (unavaliableSpaces: Position[]): Position | null => {
-		const avaliableSpaces: Position[] = [];
+		const avaliableSpaces: [number, number][] = [];
 
 		for (let x = 0; x < fieldHeight; x++) {
 			for (let y = 0; y < fieldWidth; y++) {
 				if (!unavaliableSpaces.some((s) => s.x === x && s.y === y)) {
-					avaliableSpaces.push({ x, y });
+					avaliableSpaces.push([x, y]);
 				}
 			}
 		}
@@ -33,7 +33,7 @@
 		const randomPosition = Math.floor(Math.random() * avaliableSpaces.length);
 		const newPosition = avaliableSpaces[randomPosition];
 
-		return newPosition;
+		return { x: newPosition[0], y: newPosition[1] };
 	};
 
 	export function run() {

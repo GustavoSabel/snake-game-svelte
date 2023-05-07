@@ -1,7 +1,7 @@
 import { readable, writable } from 'svelte/store';
 
 export const gameConfig = readable({
-  fieldWidth: 21,
+  fieldWidth: 1,
   fieldHeight: 12,
   blockSize: 40,
   speed: 200,
