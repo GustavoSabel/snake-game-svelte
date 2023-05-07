@@ -121,7 +121,7 @@
 </script>
 
 {#each snake.body as part, index (part.key)}
-	<PositionElement {...part}>
+	<PositionElement x={part.x} y={part.y}>
 		{#if index === snake.body.length - 1}
 			<Head direction={part.direction} />
 		{:else}
