@@ -13,7 +13,8 @@
 	$: blockSize = $gameConfig.blockSize;
 
 	let snake: Snake;
-	let foods: Position[] = [];
+	let foods: (Position & { key: number })[] = [];
+	let foodNumber = 0;
 
 	const randomAvaliablePlace = (unavaliableSpaces: Position[]): Position | null => {
 		const avaliableSpaces: [number, number][] = [];
@@ -36,13 +37,24 @@
 		return { x: newPosition[0], y: newPosition[1] };
 	};
 
+	const createFood = (unavaliableSpaces: Position[]): (Position & { key: number }) | null => {
+		const position = randomAvaliablePlace(unavaliableSpaces);
+		if(position) {
+			return {
+				...position,
+				key: ++foodNumber
+			};
+		}
+		return null
+	};
+
 	export function run() {
 		snake.run();
 	}
 
 	export function restart() {
 		const snakeBody = snake.restart();
-		foods = [randomAvaliablePlace(snakeBody.body)!];
+		foods = [createFood(snakeBody.body)!];
 	}
 
 	function onSnakeMove(e: CustomEvent<SnakeBody>) {
@@ -63,7 +75,7 @@
 			foods = foods.filter((f) => f !== food);
 			snake.incrementSize();
 
-			const avaliablePlace = randomAvaliablePlace([...foods, ...snakeBody]);
+			const avaliablePlace = createFood([...foods, ...snakeBody]);
 			if (avaliablePlace) {
 				foods = [...foods, avaliablePlace];
 			} else {
@@ -107,7 +119,7 @@
 	<Status />
 	<Snake bind:this={snake} on:move={onSnakeMove} />
 
-	{#each foods as food}
+	{#each foods as food (food.key)}
 		<PositionElement x={food.x} y={food.y}>
 			<Food />
 		</PositionElement>
