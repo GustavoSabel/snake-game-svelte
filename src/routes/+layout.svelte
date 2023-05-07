@@ -1,3 +1,7 @@
+<svelte:head>
+	<title>Snake Game</title>
+</svelte:head>
+
 <slot />
 
 <style>
